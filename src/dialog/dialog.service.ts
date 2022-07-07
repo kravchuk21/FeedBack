@@ -11,7 +11,7 @@ export class DialogService {
 	}
 
 	async create(dto: CreateDialogDto) {
-		const newDialog = new this.dialogModel({...dto});
+		const newDialog = new this.dialogModel({ ...dto });
 		await newDialog.save();
 		return this.dialogModel.aggregate([
 			{
@@ -42,8 +42,8 @@ export class DialogService {
 					foreignField: '_id',
 					as: 'lastMessage'
 				}
-			},
-		])
+			}
+		]);
 	}
 
 	async getAllUserDialogs(id: Types.ObjectId) {
@@ -81,8 +81,8 @@ export class DialogService {
 					foreignField: '_id',
 					as: 'lastMessage'
 				}
-			},
-		])
+			}
+		]);
 	}
 
 	async getById(id: string) {
@@ -92,7 +92,7 @@ export class DialogService {
 	async updateLastMessage(id: Types.ObjectId, lastMessage: Types.ObjectId) {
 		return this.dialogModel.findByIdAndUpdate(id, {
 			lastMessage
-		})
+		});
 	}
 }
 
