@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { ModelType } from '@typegoose/typegoose/lib/types';
 import { InjectModel } from 'nestjs-typegoose';
 import { UserModel } from './user.model';
-import { CreateUserDto } from './dto/create-user.dto';
+import { AuthRegisterDto } from '../auth/dto/auth-register.dto';
 
 @Injectable()
 export class UserService {
@@ -21,7 +21,7 @@ export class UserService {
 		return this.userModel.findOne({ email }).exec();
 	}
 
-	async createUser(dto: CreateUserDto) {
+	async createUser(dto: AuthRegisterDto) {
 		await this.userModel.create(dto);
 	}
 

@@ -4,6 +4,8 @@ import { TypegooseModule } from 'nestjs-typegoose';
 import { AuthModule } from './auth/auth.module';
 import { getMongoConfig } from './configs/mongo.config';
 import { UserModule } from './user/user.module';
+import { MessageModule } from './message/message.module';
+import { DialogModule } from './dialog/dialog.module';
 
 @Module({
 	imports: [
@@ -14,7 +16,9 @@ import { UserModule } from './user/user.module';
 			inject: [ConfigService],
 			useFactory: getMongoConfig
 		}),
-		UserModule
+		UserModule,
+		MessageModule,
+		DialogModule
 	]
 })
 export class AppModule {

@@ -8,8 +8,9 @@ import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class AuthService {
-	constructor(private readonly userService: UserService,
-							private readonly jwtService: JwtService) {
+	constructor(
+		private readonly userService: UserService,
+		private readonly jwtService: JwtService) {
 	}
 
 	async register(dto: AuthRegisterDto) {
@@ -17,7 +18,7 @@ export class AuthService {
 		const newUserDto = {
 			fullName: dto.fullName,
 			email: dto.email,
-			passwordHash: await hash(dto.password, salt)
+			password: await hash(dto.password, salt)
 		};
 		return this.userService.createUser(newUserDto);
 	}
@@ -27,7 +28,7 @@ export class AuthService {
 		if (!user) {
 			throw new UnauthorizedException(USER_NOT_FOUND_ERROR);
 		}
-		const isCorrectPassword = await compare(password, user.passwordHash);
+		const isCorrectPassword = await compare(password, user.password);
 		if (!isCorrectPassword) {
 			throw new UnauthorizedException(WRONG_PASSWORD_ERROR);
 		}
