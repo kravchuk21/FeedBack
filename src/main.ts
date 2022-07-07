@@ -11,6 +11,7 @@ async function bootstrap() {
 	const config = new DocumentBuilder()
 		.setTitle('FeedBack API')
 		.setVersion('0.1')
+		.setLicense('MIT License', 'https://github.com/kravchuk21/FeedBack/blob/master/LICENSE')
 		.build();
 	const document = SwaggerModule.createDocument(app, config);
 	SwaggerModule.setup('/', app, document);

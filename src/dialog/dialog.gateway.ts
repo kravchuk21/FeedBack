@@ -34,8 +34,6 @@ export class DialogGateway {
 			mate: dto.mate
 		});
 
-		console.log(newDialog);
-
-		this.server.emit('DIALOG:CREATED', newDialog);
+		return this.server.emit('DIALOG:CREATED', newDialog);
 	}
 }

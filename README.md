@@ -13,3 +13,6 @@ $ git clone <ssh>
 or
 
 Download [zip](https://github.com/kravchuk21/FeedBack/archive/refs/heads/master.zip)
+
+# License
+MIT License, more details here [LICENSE](https://github.com/kravchuk21/FeedBack/blob/master/LICENSE).
