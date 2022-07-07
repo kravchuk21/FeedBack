@@ -18,7 +18,7 @@ import { DialogModule } from './dialog/dialog.module';
 		}),
 		UserModule,
 		MessageModule,
-		DialogModule,
+		DialogModule
 	]
 })
 export class AppModule {
