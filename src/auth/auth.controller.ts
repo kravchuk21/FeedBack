@@ -5,6 +5,7 @@ import { AuthRegisterDto } from './dto/auth-register.dto';
 import { UserService } from '../user/user.service';
 import { ALREADY_REGISTERED_ERROR } from './auth.constants';
 import { ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { VerifyDto } from './dto/verify.dto';
 
 @ApiTags('Authorization')
 @Controller('auth')
@@ -60,5 +61,11 @@ export class AuthController {
 	async login(@Body() { email, password }: AuthLoginDto) {
 		const { email: validatedEmail } = await this.authService.validateUser(email, password);
 		return this.authService.login(validatedEmail);
+	}
+
+	@HttpCode(200)
+	@Post('verify')
+	async verify(@Body() dto: VerifyDto) {
+		return this.authService.verify(dto.verificationCode, dto.email);
 	}
 }
