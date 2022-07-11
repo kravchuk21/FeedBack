@@ -6,6 +6,7 @@ import { getMongoConfig } from './configs/mongo.config';
 import { UserModule } from './user/user.module';
 import { MessageModule } from './message/message.module';
 import { DialogModule } from './dialog/dialog.module';
+import { MailModule } from './mail/mail.module';
 
 @Module({
 	imports: [
@@ -18,7 +19,8 @@ import { DialogModule } from './dialog/dialog.module';
 		}),
 		UserModule,
 		MessageModule,
-		DialogModule
+		DialogModule,
+		MailModule
 	]
 })
 export class AppModule {

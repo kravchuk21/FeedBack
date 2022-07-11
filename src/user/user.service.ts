@@ -25,4 +25,8 @@ export class UserService {
 		await this.userModel.create(dto);
 	}
 
+	async updateUserVerify(email: string, verificationCode: string, verify = false) {
+		await this.userModel.findOneAndUpdate({ email }, { verify, verificationCode });
+	}
+
 }
