@@ -10,17 +10,21 @@ import {
 import { UserModel } from 'src/user/user.model';
 import { compare, genSalt, hash } from 'bcryptjs';
 import { JwtService } from '@nestjs/jwt';
+import { MailService } from '../mail/mail.service';
 
 @Injectable()
 export class AuthService {
 	constructor(
 		private readonly userService: UserService,
+		private readonly mailService: MailService,
 		private readonly jwtService: JwtService) {
 	}
 
 	async register(dto: AuthRegisterDto) {
 		const salt = await genSalt(10);
 		const verificationCode = AuthService.generateVerifyCode();
+
+		await this.mailService.sendUserConfirmation(dto.email, verificationCode);
 
 		const newUserDto = {
 			fullName: dto.fullName,
@@ -67,10 +71,14 @@ export class AuthService {
 		if (!isCorrectVerificationCode) {
 			throw new UnauthorizedException(WRONG_VERIFICATION_CODE_ERROR);
 		}
+
+		return this.userService.updateUserVerify(email, '', true);
 	}
 
 	async getNewVerificationCode(email: string) {
 		const verificationCode = AuthService.generateVerifyCode();
+
+		await this.mailService.sendUserConfirmation(email, verificationCode);
 
 		return this.userService.updateUserVerify(email, await AuthService.hashVerifyCode(verificationCode));
 	}
