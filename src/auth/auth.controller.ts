@@ -68,4 +68,10 @@ export class AuthController {
 	async verify(@Body() dto: VerifyDto) {
 		return this.authService.verify(dto.verificationCode, dto.email);
 	}
+
+	@HttpCode(200)
+	@Post('getNewVerificationCode')
+	async getNewVerificationCode(@Body() dto: Pick<VerifyDto, 'email'>) {
+		return this.authService.getNewVerificationCode(dto.email);
+	}
 }
