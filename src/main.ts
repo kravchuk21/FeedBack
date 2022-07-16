@@ -13,8 +13,8 @@ async function bootstrap() {
 		optionsSuccessStatus: 200,
 		credentials: true,
 		allowedHeaders:
-		  'Origin,X-Requested-With,Content-Type,Accept,Authorization,authorization,X-Forwarded-for',
-	  });
+			'Origin,X-Requested-With,Content-Type,Accept,Authorization,authorization,X-Forwarded-for'
+	});
 
 
 	app.useGlobalPipes(new ValidationPipe());
@@ -29,7 +29,7 @@ async function bootstrap() {
 	SwaggerModule.setup('/', app, document);
 
 	app.setGlobalPrefix('api');
-	await app.listen(7777);
+	await app.listen(process.env.PORT || 7777);
 }
 
 bootstrap();
