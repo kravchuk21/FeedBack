@@ -4,7 +4,7 @@ import { IdValidationPipe } from '../pipes/id-validation.pipe';
 import { UNABLE_TO_RECEIVE_MESSAGES } from './message.constants';
 import { JwtAuthGuard } from '../auth/guards/jwt.guard';
 import { FindMessagesDto } from './dto/find-messages.dto';
-import { UserEmail } from '../decorators/email.decorarator';
+import { UserEmail } from '../decorators/email.decorator';
 import { UserService } from '../user/user.service';
 import { DialogService } from '../dialog/dialog.service';
 import { USER_NOT_FOUND_ERROR } from '../auth/auth.constants';

@@ -2,7 +2,7 @@ import { BadRequestException, Controller, Get, Param, UseGuards } from '@nestjs/
 import { UserService } from './user.service';
 import { IdValidationPipe } from '../pipes/id-validation.pipe';
 import { JwtAuthGuard } from 'src/auth/guards/jwt.guard';
-import { UserEmail } from '../decorators/email.decorarator';
+import { UserEmail } from '../decorators/email.decorator';
 import { ApiBearerAuth, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { USER_NOT_FOUND_ERROR } from '../auth/auth.constants';
 
@@ -86,6 +86,25 @@ export class UserController {
 
 		return user;
 	}
+
+	@UseGuards(JwtAuthGuard)
+	@Get('me')
+	async getProfile(@UserEmail() email: string) {
+		console.log("email", email)
+		const user = await this.userService.getUserByEmail(email);
+
+		if (!user) {
+			throw new BadRequestException(USER_NOT_FOUND_ERROR);
+		}
+
+		const { fullName, verify, createdAt, updatedAt, avatar } = user;
+		console.log( fullName, verify, createdAt, updatedAt, avatar );
+
+		return {
+			fullName, verify, createdAt, updatedAt, avatar, email,
+		};
+	}
+
 
 	//TODO: user search
 }
