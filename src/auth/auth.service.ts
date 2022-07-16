@@ -52,7 +52,11 @@ export class AuthService {
 
 	async login(email: string) {
 		const payload = { email };
+		const user = await this.userService.getUserByEmail(email);
+		const { verify } = user;
 		return {
+			verify,
+			email,
 			access_token: await this.jwtService.signAsync(payload)
 		};
 	}

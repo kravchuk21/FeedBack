@@ -1,6 +1,6 @@
 import { MessageBody, SubscribeMessage, WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
 import { CreateDialogDto } from './dto/create-dialog.dto';
-import { UserEmail } from '../decorators/email.decorarator';
+import { UserEmail } from '../decorators/email.decorator';
 import { UserService } from '../user/user.service';
 import { BadRequestException } from '@nestjs/common';
 import { USER_NOT_FOUND_ERROR } from '../auth/auth.constants';
