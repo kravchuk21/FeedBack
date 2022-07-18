@@ -81,9 +81,7 @@ export class AuthService {
 
 	async getNewVerificationCode(email: string) {
 		const verificationCode = AuthService.generateVerifyCode();
-
 		await this.mailService.sendUserConfirmation(email, verificationCode);
-
 		return this.userService.updateUserVerify(email, await AuthService.hashVerifyCode(verificationCode));
 	}
 

@@ -29,4 +29,8 @@ export class UserService {
 		await this.userModel.findOneAndUpdate({ email }, { verify, verificationCode });
 	}
 
+	async deleteUser(id: string) {
+		await this.userModel.findByIdAndDelete(id);
+	}
+
 }

@@ -7,6 +7,7 @@ import { UserModule } from './user/user.module';
 import { MessageModule } from './message/message.module';
 import { DialogModule } from './dialog/dialog.module';
 import { MailModule } from './mail/mail.module';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
 	imports: [
@@ -17,6 +18,7 @@ import { MailModule } from './mail/mail.module';
 			inject: [ConfigService],
 			useFactory: getMongoConfig
 		}),
+		ScheduleModule.forRoot(),
 		UserModule,
 		MessageModule,
 		DialogModule,
