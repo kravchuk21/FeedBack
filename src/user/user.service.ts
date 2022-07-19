@@ -14,11 +14,15 @@ export class UserService {
 	}
 
 	async getUserById(id: string): Promise<UserModel> | null {
-		return this.userModel.findById(id).exec();
+		return (await this.userModel.findById(id).exec()).toObject();
 	}
 
 	async getUserByEmail(email: string): Promise<UserModel> | null {
-		return this.userModel.findOne({ email }).exec();
+		return (await this.userModel.findOne({ email }).exec()).toObject();
+	}
+
+	async findUser(text: string) {
+		return this.userModel.find({ $text: { $search: text, $caseSensitive: false }}).exec();
 	}
 
 	async createUser(dto: AuthRegisterDto) {
