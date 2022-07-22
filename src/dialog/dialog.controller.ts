@@ -1,6 +1,6 @@
 import { BadRequestException, Controller, Get, UseGuards } from '@nestjs/common';
 import { DialogService } from './dialog.service';
-import { JwtAuthGuard } from 'src/auth/guards/jwt.guard';
+import { JwtAuthGuard } from '../auth/guards/jwt.guard';
 import { UserEmail } from '../decorators/email.decorator';
 import { UserService } from '../user/user.service';
 import { USER_NOT_FOUND_ERROR } from '../auth/auth.constants';

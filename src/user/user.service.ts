@@ -18,11 +18,17 @@ export class UserService {
 	}
 
 	async getUserByEmail(email: string): Promise<UserModel> | null {
-		return (await this.userModel.findOne({ email }).exec()).toObject();
+		return this.userModel.findOne({ email }).exec();
 	}
 
 	async findUser(text: string) {
-		return this.userModel.find({ $text: { $search: text, $caseSensitive: false }}).exec();
+		return this.userModel.aggregate([
+			{ $match: {
+					$or: [
+						{ 'email': { '$regex': text, '$options': 'i' } },
+						{ 'fullName': { '$regex': text, '$options': 'i' } }
+					]
+				} }])
 	}
 
 	async createUser(dto: AuthRegisterDto) {

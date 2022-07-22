@@ -1,5 +1,5 @@
 import { MessageBody, SubscribeMessage, WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
-import { DialogService } from 'src/dialog/dialog.service';
+import { DialogService } from '../dialog/dialog.service';
 import { CreateMessageDto } from './dto/create-message.dto';
 import { BadRequestException } from '@nestjs/common';
 import { DIALOG_NOT_FOUND_ERROR } from '../dialog/dialog.constants';

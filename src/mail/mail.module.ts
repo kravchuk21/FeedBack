@@ -10,7 +10,6 @@ import { join } from 'path';
 	imports: [
 		MailerModule.forRootAsync({
 			useFactory: async (config: ConfigService) => {
-				console.log(12);
 				return getMailConfig(config, join(__dirname, 'templates'))
 			},
 			inject: [ConfigService],

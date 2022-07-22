@@ -1,10 +1,10 @@
-import { BadRequestException, Controller, Get, Param, UseGuards } from '@nestjs/common';
+import { BadRequestException, Controller, Delete, Get, Param, UnauthorizedException, UseGuards } from '@nestjs/common';
 import { UserService } from './user.service';
 import { IdValidationPipe } from '../pipes/id-validation.pipe';
-import { JwtAuthGuard } from 'src/auth/guards/jwt.guard';
 import { ApiBearerAuth, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { USER_NOT_FOUND_ERROR } from '../auth/auth.constants';
+import { USER_CAN_NOT_BE_DELETED, USER_NOT_FOUND_ERROR } from '../auth/auth.constants';
 import { UserId } from '../decorators/id.decorator';
+import { JwtAuthGuard } from '../auth/guards/jwt.guard';
 
 @ApiTags('User')
 @ApiBearerAuth()
@@ -75,6 +75,7 @@ export class UserController {
 			}
 		}
 	})
+
 	@UseGuards(JwtAuthGuard)
 	@Get('getById/:id')
 	async getUserById(@Param('id', IdValidationPipe) id: string) {
@@ -126,11 +127,27 @@ export class UserController {
 
 		const { password, verificationCode, ...userData } = user;
 
-		return userData
+		return userData;
 	}
 
 	@Get('search/:text')
 	searchUser(@Param('text') text: string) {
 		return this.userService.findUser(text);
+	}
+
+	@Delete('/deleteById/:id')
+	@UseGuards(JwtAuthGuard)
+	async deleteUser(@Param('id') deletedId: string, @UserId() id: string) {
+		if (deletedId !== id) {
+			throw new UnauthorizedException(USER_CAN_NOT_BE_DELETED);
+		}
+
+		const user = await this.userService.getUserById(deletedId);
+
+		if(!user) {
+			throw new BadRequestException(USER_NOT_FOUND_ERROR);
+		}
+
+		return this.userService.deleteUser(deletedId);
 	}
 }
