@@ -66,12 +66,16 @@ export class DialogController {
 	@Get()
 	async getAllUserDialogs(@UserEmail() email: string) {
 		const user = await this.userService.getUserByEmail(email);
+		console.log(user);
+		
 
 		if (!user) {
 			throw new BadRequestException(USER_NOT_FOUND_ERROR);
 		}
 
-		return this.dialogService.getAllUserDialogs(user._id);
+		console.log(await this.dialogService.getAllUserDialogs(user._id));
+		
+		return await this.dialogService.getAllUserDialogs(user._id);
 	}
 
 }

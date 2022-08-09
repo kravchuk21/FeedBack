@@ -50,14 +50,13 @@ export class DialogService {
 		return this.dialogModel.aggregate([
 			{
 				$match: {
-					author: id
+					$or: [
+						{ author: id, },
+						{ mate: id }
+					]
 				}
 			},
-			{
-				$match: {
-					mate: id
-				}
-			},
+
 			{
 				$lookup: {
 					from: 'User',
