@@ -22,7 +22,7 @@ import { WsAuthGuard } from './guards/wsjwt.guard';
 		}),
 		PassportModule
 	],
-	providers: [AuthService, JwtStrategy, WsJwtStrategy, WsAuthGuard],
+	providers: [AuthService, JwtStrategy, WsJwtStrategy, WsAuthGuard]
 })
 export class AuthModule {
 }

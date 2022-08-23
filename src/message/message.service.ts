@@ -3,7 +3,6 @@ import { CreateMessageDto } from './dto/create-message.dto';
 import { MessageModel } from './message.model';
 import { ModelType } from '@typegoose/typegoose/lib/types';
 import { InjectModel } from 'nestjs-typegoose';
-import { Types } from 'mongoose';
 
 @Injectable()
 export class MessageService {
@@ -11,7 +10,7 @@ export class MessageService {
 	}
 
 	async create(dto: CreateMessageDto) {
-		return this.messageModel.create(dto);
+		return (await this.messageModel.create(dto)).populate('author');
 	}
 
 	async findById(id: string) {
@@ -19,21 +18,7 @@ export class MessageService {
 	}
 
 	async findAllDialogMessages(dialogId: string) {
-		return this.messageModel.aggregate([
-			{
-				$match: {
-					dialogId: new Types.ObjectId(dialogId)
-				}
-			},
-			{
-				$lookup: {
-					from: 'User',
-					localField: 'authorId',
-					foreignField: '_id',
-					as: 'user'
-				}
-			}
-		]).exec();
+		return this.messageModel.find({ dialogId }).populate('author').exec();
 	}
 
 	async deleteById(id: string) {

@@ -1,17 +1,18 @@
-import { prop } from '@typegoose/typegoose';
+import { prop, Ref } from '@typegoose/typegoose';
 import { Base, TimeStamps } from '@typegoose/typegoose/lib/defaultClasses';
-import { Types } from 'mongoose';
+import { UserModel } from '../user/user.model';
+import { MessageModel } from '../message/message.model';
 
 export interface DialogModel extends Base {
 }
 
 export class DialogModel extends TimeStamps {
-	@prop()
-	author: Types.ObjectId;
+	@prop({ ref: () => UserModel })
+	author: Ref<UserModel>;
 
-	@prop()
-	mate: Types.ObjectId;
+	@prop({ ref: () => UserModel })
+	mate: Ref<UserModel>;
 
-	@prop()
-	lastMessage?: Types.ObjectId;
+	@prop({ ref: () => MessageModel })
+	lastMessage?: Ref<MessageModel>;
 }

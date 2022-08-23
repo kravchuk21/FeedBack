@@ -1,81 +1,52 @@
-import { BadRequestException, Controller, Get, UseGuards } from '@nestjs/common';
+import { BadRequestException, Controller, Get, Param, UseGuards } from '@nestjs/common';
 import { DialogService } from './dialog.service';
 import { JwtAuthGuard } from '../auth/guards/jwt.guard';
 import { UserEmail } from '../decorators/email.decorator';
 import { UserService } from '../user/user.service';
 import { USER_NOT_FOUND_ERROR } from '../auth/auth.constants';
-import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { IdValidationPipe } from '../pipes/id-validation.pipe';
+import { DIALOG_NOT_FOUND_ERROR } from './dialog.constants';
+import { UserId } from '../decorators/id.decorator';
 
-@ApiBearerAuth()
-@ApiTags('Dialog')
 @Controller('dialog')
 export class DialogController {
 	constructor(private readonly dialogService: DialogService,
 							private readonly userService: UserService) {
 	}
 
-
-	@ApiResponse({
-		status: 200,
-		description: 'All user dialogs',
-		schema: {
-			example: [
-				{
-					'_id': '62c6ea7b62ae97005c3b29df',
-					'author': [
-						{
-							'_id': '62c6c32b08e4b66261307319',
-							'fullName': 'Vladislav',
-							'email': 'krauchukvlad@gmail.com',
-							'password': '$2a$10$35g5LjG5ov8ox0ngMJ9YmO4KjG.NBFzELMudiRymMZ2zxLwxaWF/W',
-							'createdAt': '2022-07-07T11:27:39.517Z',
-							'updatedAt': '2022-07-07T11:27:39.517Z',
-							'__v': 0
-						}
-					],
-					'mate': [
-						{
-							'_id': '62c6c32b08e4b66261307319',
-							'fullName': 'Vladislav',
-							'email': 'krauchukvlad@gmail.com',
-							'password': '$2a$10$35g5LjG5ov8ox0ngMJ9YmO4KjG.NBFzELMudiRymMZ2zxLwxaWF/W',
-							'createdAt': '2022-07-07T11:27:39.517Z',
-							'updatedAt': '2022-07-07T11:27:39.517Z',
-							'__v': 0
-						}
-					],
-					'createdAt': '2022-07-07T14:15:23.569Z',
-					'updatedAt': '2022-07-07T14:15:23.569Z',
-					'__v': 0,
-					'lastMessage': []
-				}
-			]
-		}
-	})
-	@ApiResponse({
-		status: 401,
-		description: 'User unauthorized',
-		schema: {
-			example: {
-				'statusCode': 401,
-				'message': 'Unauthorized'
-			}
-		}
-	})
 	@UseGuards(JwtAuthGuard)
 	@Get()
 	async getAllUserDialogs(@UserEmail() email: string) {
 		const user = await this.userService.getUserByEmail(email);
-		console.log(user);
-		
 
 		if (!user) {
 			throw new BadRequestException(USER_NOT_FOUND_ERROR);
 		}
 
-		console.log(await this.dialogService.getAllUserDialogs(user._id));
-		
 		return await this.dialogService.getAllUserDialogs(user._id);
 	}
 
+	@UseGuards(JwtAuthGuard)
+	@Get('/getMate/:dialogId')
+	async getDialogMate(@Param('dialogId', IdValidationPipe) dialogId: string, @UserId('id', IdValidationPipe) id: string) {
+		const dialog = await this.dialogService.getById(dialogId);
+
+		if (!dialog) {
+			throw new BadRequestException(DIALOG_NOT_FOUND_ERROR);
+		}
+
+		return id.toString() === dialog.author._id.toString() ? dialog.mate : dialog.author;
+	}
+
+	@UseGuards(JwtAuthGuard)
+	@Get('/getByUser/:userId')
+	async findDialogByUser(@UserId('id', IdValidationPipe) id: string, @Param('userId', IdValidationPipe) userId: string) {
+		const dialog = await this.dialogService.getByUser(userId, id);
+
+		if (!dialog) {
+			throw new BadRequestException(DIALOG_NOT_FOUND_ERROR);
+		}
+
+		return dialog._id
+	}
 }

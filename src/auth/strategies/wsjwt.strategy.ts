@@ -22,13 +22,10 @@ export class WsJwtStrategy extends PassportStrategy(Strategy, 'wsjwt') {
 		const user = await this.userService.getUserByEmail(email);
 
 		if (!user) {
-			console.log('ЭЭЭЭЭХХ');
 			throw new UnauthorizedException();
 		}
 
 		if (!user.verify) {
-			console.log('ЭЭЭЭЭХХ');
-
 			throw new UnauthorizedException(EMAIL_IS_NOT_VERIFIED);
 		}
 
