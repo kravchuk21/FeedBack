@@ -10,37 +10,30 @@ export class UserService {
 	}
 
 	async getAllUsers(): Promise<UserModel[]> {
-		return this.userModel.find().exec();
+		return await this.userModel.find().exec();
 	}
 
-	async getUserById(id: string): Promise<UserModel> | null {
-		return (await this.userModel.findById(id).exec()).toObject();
+	async getUserById(id: string, populate?: string): Promise<UserModel> | null {
+		return await this.userModel.findById(id).populate(populate).exec();
 	}
 
-	async getUserByEmail(email: string): Promise<UserModel> | null {
-		return this.userModel.findOne({ email }).exec();
+	async getUserByEmail(email: string, populate?: string): Promise<UserModel> | null {
+		return await this.userModel.findOne({ email }).populate(populate).exec();
 	}
 
 	async findUser(text: string) {
-		return this.userModel.aggregate([
-			{ $match: {
-					$or: [
-						{ 'email': { '$regex': text, '$options': 'i' } },
-						{ 'fullName': { '$regex': text, '$options': 'i' } }
-					]
-				} }])
+		return this.userModel.find({ $text: { $search: text } });
 	}
 
 	async createUser(dto: AuthRegisterDto) {
-		await this.userModel.create(dto);
+		return await this.userModel.create(dto);
 	}
 
 	async updateUserVerify(email: string, verificationCode: string, verify = false) {
-		await this.userModel.findOneAndUpdate({ email }, { verify, verificationCode });
+		return this.userModel.findOneAndUpdate({ email }, { verify, verificationCode });
 	}
 
 	async deleteUser(id: string) {
-		await this.userModel.findByIdAndDelete(id);
+		return this.userModel.findByIdAndDelete(id);
 	}
-
 }

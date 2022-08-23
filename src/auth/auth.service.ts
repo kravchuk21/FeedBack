@@ -33,11 +33,11 @@ export class AuthService {
 			verificationCode: await AuthService.hashVerifyCode(verificationCode)
 		};
 
-		return this.userService.createUser(newUserDto);
+		return await this.userService.createUser(newUserDto);
 	}
 
 	async validateUser(email: string, password: string): Promise<Pick<UserModel, 'email'>> {
-		const user = await this.userService.getUserByEmail(email);
+		const user = await this.userService.getUserByEmail(email, 'password');
 		if (!user) {
 			throw new UnauthorizedException(USER_NOT_FOUND_ERROR);
 		}
@@ -62,7 +62,8 @@ export class AuthService {
 	}
 
 	async verify(verificationCode: string, email: string) {
-		const user = await this.userService.getUserByEmail(email);
+		const user = await this.userService.getUserByEmail(email, 'verificationCode');
+
 		if (!user) {
 			throw new UnauthorizedException(USER_NOT_FOUND_ERROR);
 		}
@@ -72,6 +73,7 @@ export class AuthService {
 		}
 
 		const isCorrectVerificationCode = await compare(verificationCode, user.verificationCode);
+
 		if (!isCorrectVerificationCode) {
 			throw new UnauthorizedException(WRONG_VERIFICATION_CODE_ERROR);
 		}
@@ -81,7 +83,9 @@ export class AuthService {
 
 	async getNewVerificationCode(email: string) {
 		const verificationCode = AuthService.generateVerifyCode();
+
 		await this.mailService.sendUserConfirmation(email, verificationCode);
+
 		return this.userService.updateUserVerify(email, await AuthService.hashVerifyCode(verificationCode));
 	}
 

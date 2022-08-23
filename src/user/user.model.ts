@@ -1,9 +1,10 @@
-import { prop } from '@typegoose/typegoose';
+import { index, prop } from '@typegoose/typegoose';
 import { Base, TimeStamps } from '@typegoose/typegoose/lib/defaultClasses';
 
 export interface UserModel extends Base {
 }
 
+@index({email: 'text', fullname: 'text'})
 export class UserModel extends TimeStamps {
 	@prop()
 	fullName: string;
@@ -14,12 +15,12 @@ export class UserModel extends TimeStamps {
 	@prop({ unique: true })
 	email: string;
 
-	@prop()
+	@prop({select: false})
 	password: string;
 
 	@prop({ default: false })
 	verify: boolean;
 
-	@prop()
+	@prop({select: false})
 	verificationCode: string;
 }
